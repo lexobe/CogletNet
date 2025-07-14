@@ -1,0 +1,120 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# CogletNet 项目结构指南
+
+## 核心模块
+
+主要入口点是 [src/cogletnet/core/vector_store.py](mdc:src/cogletnet/core/vector_store.py)，它实现了向量存储的核心功能。
+
+### 向量存储
+- 使用 Upstash Vector 作为后端存储
+- 主要类：`VectorStore`
+- 核心方法：
+  - `add_coglet`: 添加单个认元
+  - `add_coglets`: 批量添加认元
+  - `search_similar`: 搜索相似认元
+  - `get_coglet`: 获取单个认元
+  - `update_coglet`: 更新认元
+  - `delete_coglet`: 删除认元
+  - `clean_coglet_set`: 清理认元集合
+
+### 工具模块
+- [src/cogletnet/utils/logging.py](mdc:src/cogletnet/utils/logging.py): 日志配置
+- [src/cogletnet/utils/id_generator.py](mdc:src/cogletnet/utils/id_generator.py): ID 生成工具
+
+## 测试结构
+
+测试文件位于 [tests/](mdc:tests/) 目录下：
+- [tests/core/test_vector_store.py](mdc:tests/core/test_vector_store.py): 向量存储测试
+- [tests/core/test_real_think_with_20_coglets.py](mdc:tests/core/test_real_think_with_20_coglets.py): 实际场景测试
+
+## 配置
+
+- [.env](mdc:.env): 环境变量配置
+- [requirements.txt](mdc:requirements.txt): 项目依赖
+
+## 代码规范
+
+1. 导入顺序：
+   ```python
+   # 标准库
+   import json
+   import time
+   
+   # 第三方库
+   from upstash_vector import Index, Vector
+   
+   # 本地模块
+   from ..utils.logging import setup_logger
+   ```
+
+2. 函数文档：
+   ```python
+   def function_name(param1: str, param2: int) -> bool:
+       """函数描述
+       
+       Args:
+           param1: 参数1描述
+           param2: 参数2描述
+           
+       Returns:
+           返回值描述
+           
+       Raises:
+           异常描述
+       """
+   ```
+
+3. 错误处理：
+   - 使用具体的异常类型
+   - 提供有意义的错误信息
+   - 记录详细的错误日志
+
+4. 日志规范：
+   - 使用 `setup_logger` 创建日志器
+   - 不同级别使用对应函数：debug, info, warning, error
+   - 日志信息包含上下文
+
+## 测试规范
+
+1. 测试文件命名：`test_*.py`
+2. 测试函数命名：`test_*`
+3. 测试用例结构：
+   ```python
+   def test_function_name():
+       # 准备测试数据
+       # 执行被测试的功能
+       # 验证结果
+   ```
+
+4. 测试覆盖：
+   - 正常情况
+   - 边界情况
+   - 异常情况
+
+## 性能考虑
+
+1. 向量操作：
+   - 批量操作优先
+   - 合理设置批处理大小
+   - 考虑索引更新延迟
+
+2. 内存使用：
+   - 避免不必要的数据复制
+   - 及时清理不需要的数据
+   - 使用生成器处理大量数据
+
+## 安全考虑
+
+1. 环境变量：
+   - 敏感信息存储在 .env 文件
+   - 不要硬编码密钥
+   - 使用安全的配置管理
+
+2. 数据验证：
+   - 输入参数验证
+   - 类型检查
+   - 边界值检查

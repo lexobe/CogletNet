@@ -1,14 +1,16 @@
 """
-认元（Coglet）管理模块
+认元管理模块
 
 整合向量存储和记忆锚定机制，实现完整的认元管理功能。
 """
 
 from typing import Dict, List, Any, Optional, Union
 from datetime import datetime
-from src.vector_store import VectorStore
-from src.mam import MAM
-from src.log_config import setup_logger
+import json
+import time
+from .vector_store import VectorStore
+from .mam import MAM
+from ..utils.logging import setup_logger
 
 logger = setup_logger("Coglets")
 
@@ -24,6 +26,7 @@ class Coglets:
         initial_weight: float = 0.5,  # 初始权重
         golden_ratio: float = 0.618,  # 黄金分割比例
         top_k: int = 10,  # 新增top_k参数
+        mam: Optional[MAM] = None
     ):
         """
         初始化认元管理器
@@ -36,9 +39,10 @@ class Coglets:
             initial_weight: 初始权重
             golden_ratio: 黄金分割比例
             top_k: 返回结果数量
+            mam: 记忆锚定机制实例，如果不提供则创建默认实例
         """
         self.vector_store = vector_store
-        self.mam = MAM(
+        self.mam = mam or MAM(
             beta=beta,
             gamma=gamma,
             b=b,

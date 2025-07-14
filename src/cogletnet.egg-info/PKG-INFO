@@ -1,0 +1,86 @@
+Metadata-Version: 2.4
+Name: cogletnet
+Version: 0.1.0
+Summary: Cognitive Network Implementation
+Author-email: CogletNet Team <team@cogletnet.com>
+License: MIT
+Project-URL: Homepage, https://github.com/yourusername/cogletnet
+Project-URL: Documentation, https://cogletnet.readthedocs.io/
+Project-URL: Repository, https://github.com/yourusername/cogletnet.git
+Project-URL: Changelog, https://github.com/yourusername/cogletnet/blob/main/CHANGELOG.md
+Keywords: vector-store,cognitive-computing,neural-networks
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: upstash-vector>=0.8.0
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: numpy>=1.21.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.21.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: isort>=5.12.0; extra == "dev"
+Requires-Dist: mypy>=1.0.0; extra == "dev"
+Requires-Dist: pre-commit>=3.0.0; extra == "dev"
+Dynamic: license-file
+
+# CogletNet
+
+一个基于 Upstash Vector 的向量存储实现。
+
+## 功能特性
+
+- 支持认元的添加、获取、更新和删除
+- 支持批量操作
+- 支持相似度搜索
+- 支持认元集合管理
+
+## 安装
+
+```bash
+pip install -e ".[dev]"
+```
+
+## 使用示例
+
+```python
+from src.core.vector_store import VectorStore
+
+# 初始化向量存储
+store = VectorStore(
+    url="your-upstash-url",
+    token="your-upstash-token"
+)
+
+# 添加认元
+coglet_id = store.add_coglet(
+    set_id="my-set",
+    content="这是一个测试认元",
+    metadata={"type": "test"}
+)
+
+# 搜索相似认元
+results = store.search_similar(
+    set_id="my-set",
+    query="测试认元",
+    top_k=5
+)
+```
+
+## 开发
+
+1. 克隆仓库
+2. 创建虚拟环境：`python -m venv venv`
+3. 激活虚拟环境：`source venv/bin/activate`
+4. 安装开发依赖：`pip install -e ".[dev]"`
+5. 运行测试：`pytest tests/` 

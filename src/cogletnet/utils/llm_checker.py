@@ -12,11 +12,11 @@ LLM 服务器状态检查工具
 import os
 import time
 import json
-from typing import Dict, Any, Optional
+from typing import Dict, Any, List, Optional, Union
 from datetime import datetime
 from litellm import completion_with_retries
 from litellm import ModelResponse
-from src.log_config import setup_logger
+from .logging import setup_logger
 
 logger = setup_logger("check_llm")
 
@@ -235,6 +235,43 @@ class LLMChecker:
                         logger.info(f"      Response: {result['response']}")
                     else:
                         logger.info(f"      Error: {result['error']}")
+
+def check_llm_response(response: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    检查LLM响应是否符合预期格式
+    
+    Args:
+        response: LLM响应数据
+        
+    Returns:
+        Dict[str, Any]: 处理后的响应数据
+    """
+    try:
+        # 检查响应格式
+        if not isinstance(response, dict):
+            raise ValueError("响应必须是字典类型")
+            
+        # 检查必要字段
+        required_fields = ["thought", "action", "action_input"]
+        for field in required_fields:
+            if field not in response:
+                raise ValueError(f"响应缺少必要字段: {field}")
+                
+        # 检查字段类型
+        if not isinstance(response["thought"], str):
+            raise ValueError("thought 必须是字符串类型")
+            
+        if not isinstance(response["action"], str):
+            raise ValueError("action 必须是字符串类型")
+            
+        if not isinstance(response["action_input"], dict):
+            raise ValueError("action_input 必须是字典类型")
+            
+        return response
+        
+    except Exception as e:
+        logger.error(f"LLM响应格式检查失败: {str(e)}")
+        raise
 
 if __name__ == "__main__":
     # 创建检查器

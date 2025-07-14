@@ -1,14 +1,18 @@
 """
-测试 CogletNet 类的功能
+测试 CogletNet 类
 """
 
 import os
 import json
 import pytest
 from unittest.mock import Mock, patch
-from src.CogletNet import CogletNet
+from datetime import datetime
+
+from cogletnet import CogletNet
+from cogletnet.core.vector_store import VectorStore
+from cogletnet.core.coglets import Coglets
 from dotenv import load_dotenv
-from src.log_config import setup_logger
+from cogletnet.utils.logging import setup_logger
 
 @pytest.fixture
 def mock_vector_store():
@@ -44,13 +48,19 @@ def mock_coglets(mock_vector_store):
 @pytest.fixture
 def coglet_net(mock_coglets):
     """创建CogletNet实例"""
-    with patch('src.CogletNet.VectorStore', return_value=mock_coglets.vector_store), \
-         patch('src.CogletNet.Coglets', return_value=mock_coglets):
+    with patch('cogletnet.core.cogletnet.VectorStore', return_value=mock_coglets.vector_store), \
+         patch('cogletnet.core.cogletnet.Coglets', return_value=mock_coglets):
         net = CogletNet(
-            upstash_url="test_url",
-            upstash_token="test_token",
-            set_id="test_set",
-            model="gpt-4.1-nano"  # 使用最便宜的 gpt-4.1-nano 模型
+            storage_config={
+                "upstash_url": "test_url",
+                "upstash_token": "test_token",
+                "set_id": "test_set"
+            },
+            llm_config={
+                "model": "gpt-4.1-nano",  # 使用最便宜的 gpt-4.1-nano 模型
+                "max_retries": 3,
+                "temperature": 0.7
+            }
         )
         return net
 
@@ -87,7 +97,7 @@ def test_format_llm_prompt(coglet_net):
     assert "请基于以上认知进行深入思考" in prompt
     assert "在activated_cog_ids中请使用原始的认元序号" in prompt
 
-@patch('src.CogletNet.completion_with_retries')
+@patch('cogletnet.core.cogletnet.completion_with_retries')
 def test_call_llm(mock_completion, coglet_net):
     """测试LLM调用"""
     mock_completion.return_value.choices = [
@@ -110,7 +120,7 @@ def test_call_llm(mock_completion, coglet_net):
     assert "generated_cog_texts" in result
     assert "function_calls" in result
 
-@patch('src.CogletNet.completion_with_retries')
+@patch('cogletnet.core.cogletnet.completion_with_retries')
 def test_think(mock_completion, coglet_net):
     """测试思考过程"""
     mock_completion.return_value.choices = [
@@ -132,7 +142,7 @@ def test_think(mock_completion, coglet_net):
     assert "generated_cog_texts" in result
     assert "function_calls" in result
 
-@patch('src.CogletNet.completion_with_retries')
+@patch('cogletnet.core.cogletnet.completion_with_retries')
 def test_think_loop(mock_completion, coglet_net):
     """测试思考循环"""
     mock_completion.return_value.choices = [
@@ -181,7 +191,7 @@ def test_call_function(coglet_net):
 def test_error_handling(coglet_net):
     """测试错误处理"""
     # 测试JSON解析错误
-    with patch('src.CogletNet.completion_with_retries') as mock_completion:
+    with patch('cogletnet.core.cogletnet.completion_with_retries') as mock_completion:
         mock_completion.return_value.choices = [
             Mock(message=Mock(content="invalid json"))
         ]
@@ -193,7 +203,7 @@ def test_error_handling(coglet_net):
         assert not result["function_calls"]
     
     # 测试LLM调用失败
-    with patch('src.CogletNet.completion_with_retries') as mock_completion:
+    with patch('cogletnet.core.cogletnet.completion_with_retries') as mock_completion:
         mock_completion.side_effect = Exception("API调用失败")
         result = coglet_net.think("测试输入", "test_set")
         assert result["log"] == "LLM调用失败"
@@ -212,11 +222,24 @@ def test_real_think_with_20_coglets():
 
     # 初始化真实 CogletNet
     net = CogletNet(
-        upstash_url=os.getenv("UPSTASH_URL"),
-        upstash_token=os.getenv("UPSTASH_TOKEN"),
-        set_id=set_id,
-        model="gpt-4o-mini",  # 使用 litellm 官方支持的模型
-        top_k=10
+        storage_config={
+            "upstash_url": os.getenv("UPSTASH_URL"),
+            "upstash_token": os.getenv("UPSTASH_TOKEN"),
+            "set_id": set_id
+        },
+        llm_config={
+            "model": "gpt-4o-mini",  # 使用 litellm 官方支持的模型
+            "max_retries": 3,
+            "temperature": 0.7
+        },
+        memory_config={
+            "beta": 0.85,
+            "gamma": 0.3,
+            "b": 0.05,
+            "initial_weight": 0.5,
+            "golden_ratio": 0.618,
+            "top_k": 10
+        }
     )
     logger.debug("CogletNet 初始化完成")
 

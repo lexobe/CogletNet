@@ -4,7 +4,7 @@ MAM（Memory Anchor Mechanism）的单元测试
 
 import unittest
 from datetime import datetime, timedelta
-from src.mam import MAM
+from cogletnet.core.mam import MAM
 
 class TestMAM(unittest.TestCase):
     """MAM类的单元测试"""

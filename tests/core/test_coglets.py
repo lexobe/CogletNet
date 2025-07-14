@@ -4,10 +4,10 @@
 
 import pytest
 from unittest.mock import Mock
-from datetime import datetime
-from src.coglets import Coglets
-from src.vector_store import VectorStore
-from src.log_config import setup_logger
+from datetime import datetime, timedelta
+from cogletnet.core.coglets import Coglets
+from cogletnet.core.vector_store import VectorStore
+from cogletnet.utils.logging import setup_logger
 import os
 
 # 设置日志级别
@@ -126,7 +126,6 @@ def test_recall(coglets):
     # 准备测试数据
     set_id = "test_set"
     query = "测试查询"
-    top_k = 5
     
     # 模拟搜索结果
     mock_results = [
@@ -148,7 +147,7 @@ def test_recall(coglets):
     coglets = Coglets(mock_vector_store)
     
     # 测试回忆
-    result = coglets.recall(set_id, query, top_k)
+    result = coglets.recall(set_id, query)
     
     # 验证结果
     assert "all_results" in result
@@ -156,10 +155,11 @@ def test_recall(coglets):
     assert result["all_results"] == mock_results
     
     # 验证调用参数
+    mock_vector_store.search_similar.assert_called_once()
     args, kwargs = mock_vector_store.search_similar.call_args
     assert args[0] == set_id  # 第一个位置参数是 set_id
     assert args[1] == query   # 第二个位置参数是 query
-    assert args[2] == top_k   # 第三个位置参数是 top_k
+    assert args[2] == coglets.top_k  # 第三个位置参数是 top_k
 
 def test_delete(coglets):
     """测试删除认元"""

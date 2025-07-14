@@ -1,8 +1,9 @@
 """
-测试 vector_id 函数
+测试 ID 生成器
 """
 
-from src.id_generator import vector_id, generate_uuid
+import pytest
+from cogletnet.utils.id_generator import vector_id, generate_uuid
 
 # 测试相同内容生成相同 ID
 set_id1 = "test_set"

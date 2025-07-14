@@ -18,6 +18,20 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 
+def generate_id(prefix: str = "") -> str:
+    """
+    生成唯一ID，可选带前缀
+    
+    Args:
+        prefix: ID前缀，可选
+        
+    Returns:
+        str: 生成的ID
+    """
+    uuid_str = generate_uuid()
+    return f"{prefix}-{uuid_str}" if prefix else uuid_str
+
+
 def vector_id(set_id, content):
     """
     为向量生成唯一标识符
@@ -92,4 +106,13 @@ def generate_unique_content_hash_id(set_id, content):
     hash_hex = hash_obj.hexdigest()
     
     # 取前 32 位作为 ID
-    return hash_hex[:32] 
+    return hash_hex[:32]
+
+
+__all__ = [
+    'generate_uuid',
+    'generate_id',
+    'vector_id',
+    'generate_content_hash_id',
+    'generate_unique_content_hash_id'
+] 
