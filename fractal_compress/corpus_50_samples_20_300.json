@@ -1,0 +1,368 @@
+{
+  "metadata": {
+    "timestamp": "2025-07-17T15:18:55.892843",
+    "total_count": 43,
+    "length_range": "20-300字符",
+    "language_distribution": {
+      "zh": 13,
+      "en": 15,
+      "mixed": 15
+    },
+    "length_distribution": {
+      "20-50": 31,
+      "51-100": 6,
+      "101-200": 6,
+      "201-300": 0
+    },
+    "average_length": 54.7,
+    "min_length": 25,
+    "max_length": 122,
+    "purpose": "测试增强混合压缩器性能"
+  },
+  "corpus": [
+    {
+      "id": 1,
+      "text": "Quality assurance是software development的关键环节。",
+      "length": 44,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料42"
+    },
+    {
+      "id": 2,
+      "text": "Data privacy是digital age的重要议题。",
+      "length": 30,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料36"
+    },
+    {
+      "id": 3,
+      "text": "Sustainable development是未来发展的重要方向。",
+      "length": 34,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料30"
+    },
+    {
+      "id": 4,
+      "text": "人工智能技术的快速发展正在深刻改变着社会的各个方面，从智能家居到自动驾驶，从医疗诊断到金融服务，AI技术的应用领域越来越广泛。然而，随着技术的不断进步，我们也需要思考如何确保AI的发展符合人类的根本利益，避免技术带来的负面影响。",
+      "length": 114,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料4"
+    },
+    {
+      "id": 5,
+      "text": "Learning never stops in life.",
+      "length": 29,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料20"
+    },
+    {
+      "id": 6,
+      "text": "Global market的competition日益激烈。",
+      "length": 30,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料29"
+    },
+    {
+      "id": 7,
+      "text": "教育改革要注重培养学生的创新能力和实践能力，让每个孩子都能发挥自己的潜能，实现全面发展。",
+      "length": 44,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料13"
+    },
+    {
+      "id": 8,
+      "text": "经济发展要坚持可持续发展理念，既要追求经济增长，也要保护生态环境，实现人与自然的和谐共生。",
+      "length": 45,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料10"
+    },
+    {
+      "id": 9,
+      "text": "Adaptation ensures long-term survival.",
+      "length": 38,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料19"
+    },
+    {
+      "id": 10,
+      "text": "Quality matters more than quantity.",
+      "length": 35,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料27"
+    },
+    {
+      "id": 11,
+      "text": "Agile methodology提高了project delivery的效率。",
+      "length": 40,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料40"
+    },
+    {
+      "id": 12,
+      "text": "团队合作需要建立有效的沟通机制，明确分工协作，发挥每个成员的优势，实现团队目标的最大化。",
+      "length": 44,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料5"
+    },
+    {
+      "id": 13,
+      "text": "Renewable energy sources are becoming more cost-effective and environmentally friendly alternatives.",
+      "length": 100,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料18"
+    },
+    {
+      "id": 14,
+      "text": "Mobile technology让我们的生活更加convenient。",
+      "length": 36,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料43"
+    },
+    {
+      "id": 15,
+      "text": "文化传承需要在保护传统文化的同时，积极吸收外来文化的优秀成果，推动文化的创新发展。",
+      "length": 41,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料6"
+    },
+    {
+      "id": 16,
+      "text": "教育是国家发展的根本，也是民族振兴的希望。在新时代，教育改革要坚持立德树人的根本任务，培养德智体美劳全面发展的社会主义建设者和接班人。要深化教育教学改革，创新教育方式方法，提高教育质量，让每个孩子都能接受公平而有质量的教育。",
+      "length": 112,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料9"
+    },
+    {
+      "id": 17,
+      "text": "Continuous learning and skill development are essential for career advancement in today's economy.",
+      "length": 98,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料15"
+    },
+    {
+      "id": 18,
+      "text": "AI技术在healthcare领域的应用前景广阔。",
+      "length": 25,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料32"
+    },
+    {
+      "id": 19,
+      "text": "环境保护是全人类共同面临的重大挑战，气候变化、生物多样性丧失、环境污染等问题日益严重。解决这些问题需要国际社会的共同努力，每个国家都应该承担相应的责任，采取有效措施减少温室气体排放，保护生态环境，为子孙后代留下一个美丽的地球。",
+      "length": 113,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料1"
+    },
+    {
+      "id": 20,
+      "text": "User interface design需要balance functionality和aesthetics。",
+      "length": 56,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料37"
+    },
+    {
+      "id": 21,
+      "text": "环境保护不仅是政府的责任，更需要每个公民的积极参与，从垃圾分类做起，共同建设美丽家园。",
+      "length": 43,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料8"
+    },
+    {
+      "id": 22,
+      "text": "Health requires daily exercise.",
+      "length": 31,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料23"
+    },
+    {
+      "id": 23,
+      "text": "Data privacy and security are critical concerns in our increasingly connected digital world.",
+      "length": 92,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料28"
+    },
+    {
+      "id": 24,
+      "text": "Social media改变了我们的communication方式。",
+      "length": 34,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料33"
+    },
+    {
+      "id": 25,
+      "text": "创新思维需要敢于突破传统观念，勇于尝试新方法，在实践中不断总结经验，形成自己的创新模式。",
+      "length": 44,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料12"
+    },
+    {
+      "id": 26,
+      "text": "Creativity solves complex problems.",
+      "length": 35,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料21"
+    },
+    {
+      "id": 27,
+      "text": "人工智能技术在医疗、教育、金融等领域的应用越来越广泛，深刻改变着我们的生活方式和工作模式。",
+      "length": 45,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料7"
+    },
+    {
+      "id": 28,
+      "text": "Cybersecurity threats在digital world中不断evolving。",
+      "length": 47,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料39"
+    },
+    {
+      "id": 29,
+      "text": "科技创新是经济社会发展的重要驱动力，需要加大研发投入，培养更多的创新人才，提高自主创新能力。",
+      "length": 46,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料3"
+    },
+    {
+      "id": 30,
+      "text": "Mental health awareness has grown significantly, highlighting the importance of psychological well-being.",
+      "length": 105,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料26"
+    },
+    {
+      "id": 31,
+      "text": "Communication builds stronger relationships.",
+      "length": 44,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料22"
+    },
+    {
+      "id": 32,
+      "text": "Big data analytics帮助企业做出better decisions。",
+      "length": 41,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料38"
+    },
+    {
+      "id": 33,
+      "text": "Innovation drives progress forward.",
+      "length": 35,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料17"
+    },
+    {
+      "id": 34,
+      "text": "Digital transformation需要企业全面的战略规划。",
+      "length": 34,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料31"
+    },
+    {
+      "id": 35,
+      "text": "数字化转型是企业适应新时代发展的必然选择，需要加强数字基础设施建设，提升数字化管理水平。",
+      "length": 44,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料11"
+    },
+    {
+      "id": 36,
+      "text": "Artificial intelligence is revolutionizing various industries by automating processes and providing intelligent solutions.",
+      "length": 122,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料14"
+    },
+    {
+      "id": 37,
+      "text": "Environmental protection requires global cooperation and individual responsibility to address climate change effectively.",
+      "length": 121,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料25"
+    },
+    {
+      "id": 38,
+      "text": "健康的生活方式包括合理饮食、适量运动、充足睡眠和良好的心理状态，这些都是维护身体健康的基础。",
+      "length": 46,
+      "category": "中文",
+      "language": "zh",
+      "title": "测试语料2"
+    },
+    {
+      "id": 39,
+      "text": "Persistence leads to achievement.",
+      "length": 33,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料24"
+    },
+    {
+      "id": 40,
+      "text": "我们的team正在开发innovative的解决方案。",
+      "length": 27,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料35"
+    },
+    {
+      "id": 41,
+      "text": "这个project需要更多的resources和support。",
+      "length": 32,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料41"
+    },
+    {
+      "id": 42,
+      "text": "Innovation需要creative thinking和practical implementation。",
+      "length": 55,
+      "category": "混合",
+      "language": "mixed",
+      "title": "测试语料34"
+    },
+    {
+      "id": 43,
+      "text": "Social media platforms have transformed how we communicate and share information globally.",
+      "length": 90,
+      "category": "英文",
+      "language": "en",
+      "title": "测试语料16"
+    }
+  ]
+}
