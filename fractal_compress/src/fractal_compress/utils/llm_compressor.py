@@ -110,43 +110,17 @@ class LLMTextCompressor:
         custom_examples: Optional[List[Dict]] = None,
         strict_length: bool = True
     ) -> Dict[str, Any]:
-        """
-        压缩文本
-        
-        Args:
-            text: 待压缩文本
-            target_length: 目标长度
-            model: LLM模型
-            strategy: 压缩策略 ("basic", "precise", "few_shot", "creative", "strict")
-            max_attempts: 最大尝试次数
-            temperature: 温度参数
-            custom_template: 自定义模板
-            custom_examples: 自定义示例
-            strict_length: 是否严格控制长度
-        
-        Returns:
-            包含压缩结果和详细信息的字典
-        """
+        """压缩文本"""
         model = model or self.default_model
         start_time = time.time()
         
-        # 选择模板
-        if custom_template:
-            template = custom_template
-        else:
-            template = self.default_templates.get(strategy, self.default_templates["precise"])
-        
-        # 选择示例
-        examples = custom_examples or self.default_examples
+        template = custom_template if custom_template else self.default_templates.get(strategy, self.default_templates["precise"])
+        examples = custom_examples if custom_examples else self.default_examples
         
         for attempt in range(max_attempts):
             try:
-                # 构造prompt
-                prompt = self._build_prompt(
-                    template, text, target_length, strategy, examples
-                )
+                prompt = self._build_prompt(template, text, target_length, strategy, examples)
                 
-                # 调用LLM
                 response = litellm.completion(
                     model=model,
                     messages=[{"role": "user", "content": prompt}],
@@ -158,11 +132,9 @@ class LLMTextCompressor:
                 compressed = response.choices[0].message.content.strip()
                 compressed = self._clean_output(compressed)
                 
-                # 长度检查
                 if strict_length and len(compressed) > target_length:
                     compressed = self._smart_truncate(compressed, target_length)
                 
-                # 质量验证
                 if self._validate_quality(compressed, text, target_length, strict_length):
                     return {
                         "text": compressed,
@@ -178,12 +150,11 @@ class LLMTextCompressor:
                         "processing_time": time.time() - start_time,
                         "success": True,
                         "length_constraint_satisfied": len(compressed) <= target_length,
-                        "prompt": prompt  # 用于调试
+                        "prompt": prompt
                     }
                 
             except Exception as e:
                 if attempt == max_attempts - 1:
-                    # 最后一次失败，返回截断结果
                     fallback = text[:target_length] if len(text) > target_length else text
                     return {
                         "text": fallback,
@@ -203,7 +174,6 @@ class LLMTextCompressor:
                     }
                 continue
         
-        # 所有尝试失败
         fallback = text[:target_length] if len(text) > target_length else text
         return {
             "text": fallback,
@@ -221,24 +191,15 @@ class LLMTextCompressor:
             "length_constraint_satisfied": len(fallback) <= target_length
         }
     
-    def _build_prompt(
-        self, 
-        template: str, 
-        text: str, 
-        target_length: int, 
-        strategy: str, 
-        examples: List[Dict]
-    ) -> str:
+    def _build_prompt(self, template: str, text: str, target_length: int, strategy: str, examples: List[Dict]) -> str:
         """构造prompt"""
         original_length = len(text)
         compression_ratio = target_length / original_length if original_length > 0 else 0
         
-        # 格式化示例（仅用于few_shot策略）
         examples_text = ""
         if strategy == "few_shot":
             examples_text = self._format_examples(examples)
         
-        # 填充模板
         try:
             return template.format(
                 text=text,
@@ -248,13 +209,12 @@ class LLMTextCompressor:
                 examples=examples_text
             )
         except KeyError:
-            # 模板缺少某些变量，使用基础格式
             return f"请将以下文本压缩到{target_length}字符以内：\n\n{text}\n\n压缩结果："
     
     def _format_examples(self, examples: List[Dict]) -> str:
         """格式化示例文本"""
         formatted = ""
-        for i, example in enumerate(examples[:2], 1):  # 最多2个示例
+        for i, example in enumerate(examples[:2], 1):
             formatted += f"""示例{i}：
 原文："{example['original']}" (长度: {len(example['original'])})
 目标：≤{example['target']}字符
@@ -266,16 +226,19 @@ class LLMTextCompressor:
     
     def _clean_output(self, text: str) -> str:
         """清理LLM输出"""
-        # 移除引号
-        for quote in ['"', "'", '"', '"', ''', '''']:
-            if text.startswith(quote) and text.endswith(quote):
+        # 移除各种引号
+        quote_pairs = [('"', '"'), ("'", "'"), ('"', '"'), (''', ''')]
+        for start_quote, end_quote in quote_pairs:
+            if text.startswith(start_quote) and text.endswith(end_quote):
                 text = text[1:-1]
+                break
         
         # 移除常见前缀
         prefixes = ["压缩结果：", "输出：", "结果：", "答案：", "压缩："]
         for prefix in prefixes:
             if text.startswith(prefix):
                 text = text[len(prefix):].strip()
+                break
         
         return text.strip()
     
@@ -295,16 +258,9 @@ class LLMTextCompressor:
             if i < len(text) and text[i] == ' ':
                 return text[:i]
         
-        # 直接截断
         return text[:max_length]
     
-    def _validate_quality(
-        self, 
-        compressed: str, 
-        original: str, 
-        target_length: int, 
-        strict_length: bool
-    ) -> bool:
+    def _validate_quality(self, compressed: str, original: str, target_length: int, strict_length: bool) -> bool:
         """验证压缩质量"""
         if not compressed or len(compressed) == 0:
             return False
@@ -312,29 +268,13 @@ class LLMTextCompressor:
         if strict_length and len(compressed) > target_length:
             return False
         
-        # 基本质量检查
-        if len(compressed) >= len(original):  # 没有压缩效果
+        if len(compressed) >= len(original):
             return False
         
         return True
     
-    def batch_test(
-        self,
-        test_cases: List[Dict[str, Any]],
-        strategies: List[str] = None,
-        model: str = None
-    ) -> Dict[str, Any]:
-        """
-        批量测试不同策略和参数
-        
-        Args:
-            test_cases: 测试案例列表 [{"text": "...", "target": 10}, ...]
-            strategies: 要测试的策略列表
-            model: LLM模型
-        
-        Returns:
-            包含所有测试结果的字典
-        """
+    def batch_test(self, test_cases: List[Dict[str, Any]], strategies: List[str] = None, model: str = None) -> Dict[str, Any]:
+        """批量测试不同策略和参数"""
         strategies = strategies or ["basic", "precise", "few_shot"]
         results = {}
         
@@ -346,7 +286,7 @@ class LLMTextCompressor:
                     target_length=case["target"],
                     model=model,
                     strategy=strategy,
-                    max_attempts=2  # 批量测试时减少尝试次数
+                    max_attempts=2
                 )
                 results[strategy].append(result)
         
