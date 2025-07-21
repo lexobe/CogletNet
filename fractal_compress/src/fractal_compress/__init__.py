@@ -1,42 +1,35 @@
 """
-Fractal Compress - 真正的分形文本压缩
+Fractal Text Compression
 
-基于黄金分割比例的分形压缩算法，使用LLM进行智能文本压缩。
+A modern, clean text compression library using golden ratio splitting and LLM compression.
+
+Example:
+    >>> from fractal_compress import compress, split_compress, llm_compress, split
+    >>> 
+    >>> # Basic compression
+    >>> result = compress("Long text here...")
+    >>> 
+    >>> # Custom ratios
+    >>> result = compress(text, split_ratio=0.5, compression_ratio=0.4)
+    >>> 
+    >>> # Split and compress
+    >>> compressed, remaining = split_compress(text)
+    >>> 
+    >>> # Direct LLM compression
+    >>> result = llm_compress(text, target_length=20)
+    >>> 
+    >>> # Text splitting only
+    >>> part1, part2 = split(text, ratio=0.3)
 """
 
-# 标准API（推荐使用）
-from .utils import (
-    compress,
-    split_and_compress,
-    llm_compress,
-    simple_split
-)
+from .core import compress, split_compress, llm_compress, split
 
-# 核心组件和向后兼容
-from .utils import (
-    smart_split,
-    compress_text,
-    LLMTextCompressor,
-    quick_compress,
-    compare_strategies
-)
-
-__version__ = "0.3.0"
+__version__ = "1.0.0"
 __author__ = "CogletNet Team"
 
 __all__ = [
-    # 标准API（推荐）
     "compress",
-    "split_and_compress", 
+    "split_compress", 
     "llm_compress",
-    "simple_split",
-    
-    # 核心组件
-    "smart_split",
-    "LLMTextCompressor",
-    "quick_compress",
-    "compare_strategies",
-    
-    # 向后兼容
-    "compress_text"
+    "split"
 ]

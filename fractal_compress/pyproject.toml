@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fractal-compress"
-version = "0.2.0"
+version = "1.0.0"
 authors = [
     { name = "CogletNet Team", email = "team@cogletnet.com" },
 ]
-description = "True fractal text compression using golden ratio and LLM"
+description = "Modern text compression library using golden ratio splitting and LLM compression"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
-keywords = ["fractal-compression", "golden-ratio", "llm-compression"]
+keywords = ["text-compression", "golden-ratio", "llm", "nlp", "ai"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

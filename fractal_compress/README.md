@@ -1,181 +1,245 @@
 # Fractal Compress
 
-基于黄金分割比例的LLM文本压缩库，提供简洁易用的标准API。
+Modern text compression library using golden ratio splitting and LLM compression.
 
-## ✨ 新特性
+## ✨ Features
 
-### 🎯 四个标准函数，覆盖所有需求：
+- **Golden Ratio Splitting**: Intelligent text segmentation using the golden ratio (0.382/0.618)
+- **LLM Compression**: State-of-the-art language model compression
+- **Language Aware**: Automatic language detection and optimized processing
+- **Flexible Ratios**: Customizable split and compression ratios
+- **Clean API**: Four simple functions for all use cases
 
-```python
-from fractal_compress import compress, split_and_compress, llm_compress, simple_split
+## 🚀 Quick Start
 
-# 1. 标准压缩 - 一键压缩，支持自定义比例
-result = compress(text, split_ratio=0.4, compression_ratio=0.6)
-
-# 2. 分割并压缩 - 获取压缩部分和剩余部分
-compressed_part, remaining_part = split_and_compress(text)
-
-# 3. 纯LLM压缩 - 直接指定目标长度
-result = llm_compress(text, target_length=20)
-
-# 4. 简单分割 - 只分割不压缩
-part1, part2 = simple_split(text, split_ratio=0.5)
-```
-
-### 🔧 核心特性
-
-- **可配置压缩比**: 支持任意 `split_ratio` 和 `compression_ratio`
-- **简洁返回值**: 函数直接返回文本，无冗余统计信息
-- **多语言支持**: 中文、英文、混合语言智能处理
-- **黄金分割优化**: 默认使用 0.382/0.618 黄金分割比例
-- **向后兼容**: 保留旧API，平滑升级
-
-## 快速开始
-
-### 安装
+### Installation
 
 ```bash
 pip install -e .
 ```
 
-### 基本使用
+### Basic Usage
 
 ```python
-from fractal_compress import compress, split_and_compress, llm_compress
+from fractal_compress import compress, split_compress, llm_compress, split
 
-# 最简单 - 一行代码压缩
-result = compress("人工智能技术正在改变世界")
-print(result)  # "人工智能"
+# Basic compression using golden ratio
+result = compress("Your long text here...")
+print(result)
 
-# 自定义压缩比例
+# Custom compression ratios
 result = compress(
-    "AI technology is transforming industries",
-    split_ratio=0.5,      # 50% 分割
-    compression_ratio=0.4  # 40% 压缩
+    text="Long text content...",
+    split_ratio=0.5,      # Split at 50%
+    compression_ratio=0.4  # Compress to 40%
 )
 
-# 分割并处理两部分
-compressed_part, remaining_part = split_and_compress(
-    "长文本内容...",
-    split_ratio=0.6,
-    compression_ratio=0.7
-)
+# Split and compress - get both parts
+compressed, remaining = split_compress("Your text...")
+print(f"Compressed: {compressed}")
+print(f"Remaining: {remaining}")
 
-# 精确控制长度
-result = llm_compress("长文本内容", target_length=15)
-print(len(result))  # ≤ 15
+# Direct LLM compression to exact length
+result = llm_compress("Text to compress", target_length=20)
+print(f"Result length: {len(result)}")  # ≤ 20
+
+# Text splitting only
+part1, part2 = split("Text to split", ratio=0.3)
 ```
 
-### 高级用法
+## 📚 API Reference
+
+### Core Functions
+
+#### `compress(text, split_ratio=0.382, compression_ratio=0.618, model="gpt-4o-mini", language="auto")`
+Main compression function using golden ratio splitting.
+
+**Parameters:**
+- `text` (str): Input text to compress
+- `split_ratio` (float): Split ratio (0.0-1.0), default golden ratio
+- `compression_ratio` (float): Compression ratio for LLM
+- `model` (str): LLM model name
+- `language` (str): Language hint ("chinese", "english", "auto")
+
+**Returns:** Compressed text string
+
+#### `split_compress(text, split_ratio=0.382, compression_ratio=0.618, model="gpt-4o-mini", language="auto")`
+Split text and compress the first part.
+
+**Returns:** Tuple of (compressed_first_part, second_part)
+
+#### `llm_compress(text, target_length, model="gpt-4o-mini", language="auto", strategy="precise")`
+Direct LLM compression to target length.
+
+**Parameters:**
+- `target_length` (int): Exact target length in characters
+- `strategy` (str): Compression strategy ("precise", "creative", "fast")
+
+#### `split(text, ratio=0.382, language="auto")`
+Intelligent text splitting only.
+
+**Returns:** Tuple of (first_part, second_part)
+
+## 💡 Examples
+
+### Progressive Compression
 
 ```python
-# 多语言处理
+# Different compression levels
+text = "Long article content..."
+
+light = compress(text, compression_ratio=0.8)      # Light compression
+moderate = compress(text, compression_ratio=0.6)   # Moderate compression  
+aggressive = compress(text, compression_ratio=0.3) # Aggressive compression
+
+print(f"Original: {len(text)} chars")
+print(f"Light: {len(light)} chars")
+print(f"Moderate: {len(moderate)} chars") 
+print(f"Aggressive: {len(aggressive)} chars")
+```
+
+### Multi-language Processing
+
+```python
 texts = {
-    "中文": "人工智能正在改变世界",
-    "English": "AI is transforming the world", 
-    "混合": "AI人工智能technology正在changing世界"
+    "Chinese": "人工智能技术正在快速发展，改变着我们的生活方式。",
+    "English": "AI technology is rapidly advancing and changing our lives.",
+    "Mixed": "AI人工智能正在changing我们的life生活方式。"
 }
 
 for lang, text in texts.items():
-    language = "chinese" if "中文" in lang else "english" if "English" in lang else "mixed"
-    result = compress(text, language=language)
+    result = compress(text, language=lang.lower())
     print(f"{lang}: {result}")
-
-# 不同策略比较
-strategies = ["basic", "precise", "creative"]
-for strategy in strategies:
-    result = llm_compress("文本内容", target_length=10, strategy=strategy)
-    print(f"{strategy}: {result}")
-
-# 渐进式压缩
-ratios = [0.3, 0.5, 0.7, 0.9]
-for ratio in ratios:
-    result = compress(text, compression_ratio=ratio)
-    print(f"压缩比{ratio}: {result}")
 ```
 
-## 主要特性
+### Content Summarization
 
-### 🎯 精确控制
-- 基于黄金分割比例的数学精确性
-- 严格的长度约束控制
-- 可配置的压缩策略和参数
+```python
+article = """
+Long article content about quantum computing, its principles,
+applications, and future prospects in various industries...
+"""
 
-### 🚀 高性能
-- 智能文本分割算法
-- 优化的LLM调用策略
-- 批量处理和并发支持
+# Multi-level summarization
+summary_long = llm_compress(article, target_length=100)
+summary_medium = llm_compress(article, target_length=50)
+summary_short = llm_compress(article, target_length=25)
 
-### 🔧 易扩展
-- 模块化设计
-- 可自定义prompt模板
-- 支持多种语言和文本类型
+print("Detailed:", summary_long)
+print("Brief:", summary_medium)
+print("Key Point:", summary_short)
+```
 
-### 📊 质量保证
-- 置信度评估系统
-- 质量分级和验证
-- 详细的性能分析
+### Document Processing Pipeline
 
-## 使用示例
+```python
+def process_document(doc):
+    """Example document processing pipeline."""
+    # Step 1: Split document
+    main_content, appendix = split(doc, ratio=0.7)
+    
+    # Step 2: Compress main content
+    compressed_main = compress(main_content, compression_ratio=0.5)
+    
+    # Step 3: Summarize appendix
+    summarized_appendix = llm_compress(appendix, target_length=50)
+    
+    return compressed_main, summarized_appendix
 
-查看 `examples/simple_example.py` 了解详细使用方法。
+# Usage
+main, appendix = process_document("Your document content...")
+```
 
-## 环境要求
+## 🔧 Advanced Configuration
+
+### Custom Ratios
+
+The golden ratio (0.382/0.618) is optimal for many cases, but you can customize:
+
+```python
+# More aggressive splitting
+result = compress(text, split_ratio=0.2, compression_ratio=0.3)
+
+# Conservative approach
+result = compress(text, split_ratio=0.6, compression_ratio=0.8)
+
+# Equal split with moderate compression
+result = compress(text, split_ratio=0.5, compression_ratio=0.5)
+```
+
+### LLM Strategies
+
+```python
+# Precise compression (default)
+result = llm_compress(text, 30, strategy="precise")
+
+# Creative compression (more flexible)
+result = llm_compress(text, 30, strategy="creative")
+
+# Fast compression (simpler prompts)
+result = llm_compress(text, 30, strategy="fast")
+```
+
+### Language Optimization
+
+```python
+# Automatic detection (default)
+result = compress(text, language="auto")
+
+# Chinese-optimized processing
+result = compress(chinese_text, language="chinese")
+
+# English-optimized processing  
+result = compress(english_text, language="english")
+```
+
+## 🌐 Language Support
+
+- **Chinese**: Optimized for Chinese punctuation and sentence structures
+- **English**: Optimized for English grammar and word boundaries
+- **Mixed**: Handles mixed Chinese-English content
+- **Auto-detect**: Automatically detects and optimizes for the primary language
+
+## ⚙️ Requirements
 
 - Python 3.8+
-- OpenAI API密钥 (设置环境变量 `OPENAI_API_KEY`)
-- 依赖包：litellm, python-dotenv
+- `litellm` for LLM integration
+- OpenAI API key (set `OPENAI_API_KEY` environment variable)
 
-## 项目结构
+## 🧪 Testing
 
-```
-fractal_compress/
-├── src/fractal_compress/
-│   └── utils/                      # 核心工具包
-│       ├── hybrid_compressor.py    # 混合压缩器 (主要接口)
-│       ├── llm_compressor.py       # 独立LLM压缩器
-│       └── text_splitter.py        # 智能文本分割工具
-├── examples/                       # 使用示例
-│   └── simple_example.py
-└── tests/                          # 测试文件
-    └── test_fractal_compressor.py
+```bash
+# Run basic tests
+python tests/test_api.py
+
+# Run examples
+python examples/quickstart.py
+python examples/advanced_usage.py
 ```
 
-## API说明
+## 📊 Performance
 
-### 🌟 标准API（推荐）
-- `compress(text, *, split_ratio=0.382, compression_ratio=0.618, ...)` - 标准压缩
-- `split_and_compress(text, *, split_ratio=0.382, compression_ratio=0.618, ...)` - 分割并压缩
-- `llm_compress(text, *, target_length=None, compression_ratio=0.618, ...)` - 纯LLM压缩
-- `simple_split(text, *, split_ratio=0.382, language="mixed")` - 简单分割
+- **Compression Ratio**: Typically 20-60% of original length
+- **Speed**: ~1-3 seconds per compression (depends on LLM)
+- **Quality**: Maintains semantic meaning and key information
+- **Accuracy**: Respects target length constraints (±5%)
 
-### 🔧 核心组件
-- `LLMTextCompressor` - 独立LLM压缩器，支持多种策略
-- `smart_split` - 黄金分割智能文本分割
-- `quick_compress` - LLM快速压缩
-- `compare_strategies` - 策略效果比较
+## 🎯 Use Cases
 
-### 🔄 向后兼容
-- `compress_text` - 兼容旧版本的压缩函数
-- `HybridCompressor` - 高级压缩器类（保留用于特殊需求）
+- **Document Summarization**: Multi-level content summarization
+- **Data Preprocessing**: Text data compression for ML pipelines
+- **Content Management**: Efficient storage of textual content
+- **API Optimization**: Reduce payload sizes for API calls
+- **Research**: Text analysis and linguistic research
 
-## 参数说明
+## 📝 License
 
-### 通用参数
-- `split_ratio`: 分割比例 (0.0-1.0)，默认 0.382（黄金分割）
-- `compression_ratio`: 压缩比例 (0.0-1.0)，默认 0.618（黄金分割）
-- `language`: 语言类型 ("chinese", "english", "mixed")
-- `model`: LLM模型名称，默认 "gpt-4o-mini"
-- `strategy`: 压缩策略 ("basic", "precise", "few_shot", "creative", "strict")
+MIT License - feel free to use in your projects!
 
-### 特殊参数
-- `target_length`: 目标长度（仅 `llm_compress`）
-- `max_attempts`: 最大重试次数，默认 3
+## 🤝 Contributing
 
-## 开发团队
+We welcome contributions! Please see our contributing guidelines for details.
 
-CogletNet Team - 专注于认知网络和智能压缩技术研究
+---
 
-## 许可证
-
-MIT License
+**Fractal Compress** - Making text compression simple and effective. 🌀
